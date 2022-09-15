@@ -1,6 +1,6 @@
 //! @file
 
-#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_WARNINGS
 #include <sys\stat.h>
 #include <io.h>
 #include <stdio.h>
@@ -11,101 +11,158 @@
 
 
 
-/* const
-переписать походлие функции ft strcmp end begin    поменять комментарий к функции
-полность переделать функцию для сортировки строк end begin.    игнорирование пунктуации с начала строки
-добавить циклы вместо ассертов там, где нужно и создать функцию под иф
-исправить название функций
-free
-
-argv argc
-*/
-
-int ft_file_size(const char * file_name);        //const
 
 
-//! @brief открывает файл, динамически создает массив, заполняет его текстом из файла
+//! @brief функция, записывающая массив строк в файл, если файла с таким
+//!        названием не существует, то создает его
 //!
-//! @param file_name название файл, который будет обработан
+//! @param array_pointers массив указателей, который будет записан в файл
 //!
-//! @return указатель на созданный массив
-char * ft_open_file_create_array_text(const char * file_name);  //const   динамический массив free
-
-
-//! @brief подсчитывает количество строк в массиве
+//! @param file_name название файла в который будет записан массив указателей
 //!
-//! @param string массив, в котором будет производиться подсчет строк
-//!
-//! @return количество строк
-int ft_count_string(const char * string, const char symbol);
-
-
-//!	@brief создает массив указателей, каждый из которых соответсвует новой строке, символ новой строки
-//!        заменяется на нулевой в array_text
-//!
-//! @param count_of_lines количество строк в исходном тексте, нужно для динамического
-//!                       выделения памяти под массив указателей
-//!
-//! @param array_text массив, который содержит исходный текст, который будет обрабатываться
-//!
-//! @return указатель на созданный и заполненный массив указатель  динамическая память
-char ** ft_create_array_pointers(int count_of_lines, char * array_text, const char symbol);  //динамическая память
-                                                                                            //spell checker
-
-//! @brief данная функция требуется для сортировки массива указателей. Она переставляет
-//!        местами 2 элемента из массива
-//!
-//! @param array_pointers массив указателей
-//!
-//! @param i номера требуемых элементов из массива - данный и следующий
+//! @param count_of_symbols количество элементов в массиве указателей, нужно для цикла записи
 //!
 //! @return 0
-int ft_string_changer(char ** array_pointers, int number1, int number2);      // i поменять название, поменять документацию на i
-                                                           // добавить 2 параметр для сортировки
-
-//! @brief ищет с начала строки первое несовпадение элементов строк, выдает их разность
-//!
-//! @param string1 указатель на первую строку
-//!
-//! @param string2 указатель на вторую строку
-//!
-//! @return разность символов из второй строки и первой строки при их первом несовпадении
-int ft_my_str_compare(const char * string1, const char * string2, const int command);
+int ft_file_writer( char ** array_pointers, const char * file_name, const int count_of_symbols);
 
 
-//! @brief функция сортировки массива сравнение с начала строки путем перестановки указателей на эти строки
+//! @brief Функция сортировки массива. Пузырьковая сортировка. Данная функция создает дубликат
+//!        массива указателей, размер  под него выделяется с помощью calloc. После использования
+//!        необходима функция free. Принимает комману 0 или 1, необходимую для компаратора
+//!
+//! @param *my_str_compare указатель ну функцию компаратор
 //!
 //! @param array_pointers массив указателей, его дубликат будет переставляться
 //!
 //! @param count_of_strings количество строк в исходном тексте, нужно дл динамического выделения памяти
+//!
+//! @param  command команда для компаратора: 0 для сравнение строк сначала; 1 для стравнения строк с конца
 //!
 //! @return указатель на отсортированную с начала строку
 char ** ft_string_sort(int (*my_str_compare)(const char *, const char *, const int ),
                       char ** array_pointers, const int count_of_strings, const int command);
 
 
-//! @brief функция сравнения двух строк с конца
+//! @brief функция Компаратор. Ищет первое несовпадение с начала или конца (зависит от command).
+//!        Игнорирует всю пунктуацию до первой буквы
+//!
 //! @param string1 указатель на первую строку
 //!
 //! @param string2 указатель на вторую строку
 //!
+//! @param  command команда для компаратора: 0 для сравнение строк сначала; 1 для стравнения строк с конца
+//!
 //! @return разность символов из второй строки и первой строки при их первом несовпадении
+//!         1, если command введена неправильно
 int ft_my_str_compare(const char * string1, const char * string2, const int command);
-                                                                                           //1 функция
 
 
-//! @brief функция, записывающая массив строк в файл, если файла с таким
-//!        названием не существует, то создает его
+//! @brief Данная функция нужна для игнорирования в функции ft_my_str_compare знаков пунктуации
+//!        и прочих символов, не являющихся буквами
 //!
-//! @param array_pointers_sorted отсортированный массив указателей
+//! @param string строка, в которой будет проверяться пунктуация
 //!
-//! @param file_name название файла в который будет записан результат
+//! @param number адрес на номер элемента, который является первой буквой ( с конца или с начала)
 //!
-//! @param count_of_symbols количество элементов в массиве указателей, нужно для цикла записи
+//! @param command 0 или 1: 0 для поиска с начала, 1 с конца
+//!
+//! @return 0 если функция выполнила свою работу, 1 если command введена неправильно
+int ft_checker_symbols(const char * string, int * number, const int command);
+
+
+//! @brief открывает файл, динамически создает массив, заполняет его текстом из файла.
+//!        После вызова данной функции необходимо использовать free
+//!
+//! @param file_name название файл, который будет обработан
+//!
+//! @return указатель на созданный массив или 1, если введено некоректное имя файла
+
+char * ft_open_file_create_array_text(const char * file_name);
+
+
+//!	@brief динамически создает массив указателей, каждый из которых соответствует новой строке, символ, равный symbol
+//!        заменяется на нулевой в array_text. После вызова данной функции необходимо использовать free
+//!
+//! @param count_of_lines количество строк в исходном тексте, нужно для динамического
+//!                       выделения памяти под массив указателей
+//!
+//! @param array_text массив, который содержит исходный текст
+//!
+//! @param symbol при встрече данного символа, он будет заменяться на нулевой и создаваться новый
+//!        элемент созданного массива указателей
+//!
+//! @return указатель на созданный и заполненный массив указатель  динамическая память
+char ** ft_create_array_pointers(int count_of_lines, char * array_text, const char symbol);
+
+
+//! @brief  функция копирует массив указателей
+//!
+//! @param new_array новый массив, который будет заполняться
+//!
+//! @param string старый массив, не изменяется
+//!
+//! @param count_symbols количество элементов в массиве для более быстрой операции копирования
 //!
 //! @return 0
+int ft_array_copy( char ** new_array, char ** string, const int count_symbols);
 
-int ft_file_writer( char ** array_pointers, const char * file_name, const int count_of_symbols);
+
+//! @brief функция, передающая размер файла с помощью функции stat
+//!        Для использования необзодимо подключить библеотеку <sys\stat.h>
+//!
+//! @param file_name имя файла
+//!
+//! @return размер файла
+int ft_file_size(const char * file_name);        //const
+
+
+//! @brief подсчитывает количество строк в массиве
+//!
+//! @param string массив, в котором будет производиться подсчет строк
+//!
+//! @param symbol символ, при встрече которого счетчик строк будет увеличиваться
+//!
+//! @return количество строк
+int ft_count_string(const char * string, const char symbol);
+
+
+  //динамическая память
+                                                                                            //spell checker
+
+//! @brief данная функция требуется для сортировки массива указателей. Она переставляет
+//!        местами 2 элемента из массива
+//!
+//! @param array_pointers массив указателей, в котором будет производиться замена
+//!
+//! @param number1 номер первого элемента из массива
+//!
+//! @param nubmer2 номер второго элемента из массива
+//!
+//! @return 0
+int ft_string_changer(char ** array_pointers, int number1, int number2);      // i поменять название, поменять документацию на i
+                                                           // добавить 2 параметр для сортировки
+
+//! @brief распечатывает информацию о создателе программы, а также как данной программой пользоваться
+//!        данная функция срабатывает при введении в консоль 2 параметром ( после вызова программы) "--help"
+//!
+//! @return 0
+int ft_print_info(void);
+
+
+
+
+//! @brief
+//!
+//! @param
+//!
+//! @param
+//!
+//! @param
+//!
+//! @return                                                                                          //1 функция
+
+
+
 
                                               //убрать все в мейн перекинуть
 
@@ -116,10 +173,9 @@ int ft_file_writer( char ** array_pointers, const char * file_name, const int co
                                             // a.out --help    (пишет как ее вызывать, примеры вызова, добавить автора прог, версию) strcmp
 
 
-int ft_checker(const char * array);
-int ft_checker_symbols(const char * string, int * number, const int command);
-int ft_array_copy( char ** new_array, char ** string, const int count_symbols);
-int ft_print_info(void);
+
+
+
 
                                              //сделать структуру вместо массива указателей
 
@@ -307,6 +363,7 @@ char * ft_open_file_create_array_text(const char * file_name)
     assert(file_name);
 
     int file_size = ft_file_size(file_name);
+
     FILE * ptrFile = fopen(file_name, "r");
 	if (ptrFile == NULL)
         printf("uncorrect name of file\n program can't open it");
@@ -364,18 +421,6 @@ int ft_array_copy( char ** new_array, char ** string, const int count_symbols)  
 }
 
 
-int ft_checker(const char * array)
-{
-    if (array == NULL)
-    {
-        printf("ERROR \n%s: %s = NULL", __FUNCTION__, array);
-        return 1;
-        }
-        else
-            return 0;
-}
-
-
 int ft_file_size(const char * file_name)
 {
 	assert(file_name);
@@ -429,4 +474,5 @@ int ft_print_info(void)
            "HOW TO USE:\n In console you need to call up this program,"
            "after that write file, which will be processed.\n If you wouldnt write your file, program will"
            "choose file XXX.txt.\n After that you need to write two files names, where results of program will be");
+    return 0;
 }
