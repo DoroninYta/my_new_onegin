@@ -2,22 +2,8 @@
 #define Onegin_functions
 
 #include "Onegin_comments.h"
-//return norlmal
-// func swap
-// справить комментарии return 0 1
-// enum конкретнее
-// вынести из функции сортировки calloc
-// enum для command 0/1
-// переделать str_compare
-// ft_checker_symbols вывести условие в отдельную функцию, исправить первое условие, switch case вместо if
 
-
-
-// символы подряд
 // структура
-// sorted_array_pointers_end убрать, использовать
-// ft_string_sort вынести calloc  отдельную функцию
-
 
 
 int ft_file_writer( char ** array_pointers, const char * file_name, const int count_of_symbols, const char * mode)
@@ -43,16 +29,23 @@ int ft_file_writer( char ** array_pointers, const char * file_name, const int co
 	 return Normal_exit;
  }
 
+
+char ** ft_create_array_copy(char ** const array_pointers, const int count_of_strings)
+{
+    assert(array_pointers);
+
+    char ** new_array_pointers = (char **)calloc(count_of_strings, sizeof(new_array_pointers[0]));
+	assert(new_array_pointers);
+
+	ft_array_copy(new_array_pointers, array_pointers, count_of_strings);
+
+	return new_array_pointers;
+}
  //!  Сортировка идет на увелечение
 char ** ft_string_sort(int (*my_str_compare)(const char *, const char *, const int ),
                        char ** array_pointers, const int count_of_strings, const int command)
 {
 	assert(array_pointers);
-
-	char ** new_array_pointers = (char **)calloc(count_of_strings, sizeof(new_array_pointers[0]));
-	assert(new_array_pointers);
-
-	ft_array_copy(new_array_pointers, array_pointers, count_of_strings);
 
 	int count_of_replacement = 1;
 	while (count_of_replacement > 0)
@@ -61,16 +54,16 @@ char ** ft_string_sort(int (*my_str_compare)(const char *, const char *, const i
         int i = 0;
 		while (i + 1 < count_of_strings)
 		{
-			if ((*my_str_compare)(new_array_pointers[i], new_array_pointers[i+1], command) < 0)
+			if ((*my_str_compare)(array_pointers[i], array_pointers[i+1], command) < 0)
 			{
 				count_of_replacement++;
-				ft_string_changer(new_array_pointers, i, i + 1);
+				ft_string_changer(array_pointers, i, i + 1);
 			}
 			i++;
 		}
 	}
 
-	return new_array_pointers;
+	return array_pointers;
 }
 
 int straight_comparing(const char * string1, const char * string2)
@@ -183,6 +176,8 @@ char * ft_open_file_create_array_text(const char * file_name)
 
 	array_with_text[normal_size] = '\0';   //избавление от мусора при печати
 
+	fclose(ptrFile);
+
 	return array_with_text;
 }
 
@@ -212,7 +207,32 @@ char ** ft_create_array_pointers(int count_of_lines, char * array_text, const ch
 	return array_pointers;
 }
 
-              //cdecl reading
+
+int ft_files_name(char ** file_name_read, char ** file_name_write, const int argc, char * const argv[])
+{
+    if (argc >= 2)
+    {
+        if (strcmp(argv[1], "--help") == 0)
+        {
+            ft_print_info();
+            return Normal_exit;
+        }
+        *file_name_read = argv[1];
+
+        if (argc > 3)
+            *file_name_write = argv[2];
+        else
+            *file_name_write = "ONEGIN.txt";
+    }
+
+    else
+    {
+        *file_name_read  = "XXX.txt";
+        *file_name_write = "ONEGIN.txt";
+    }
+    return Normal_exit;
+}
+
 int ft_array_copy( char ** new_array, char ** const string, const int count_symbols)  // ДЕД вопрос: почему выдает ошибку, если я делаю второй массив const
 {
     int i = 0;

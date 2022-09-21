@@ -23,6 +23,8 @@ enum command {
 };
 
 
+int ft_files_name(char ** file_name_read, char ** file_name_write, const int argc, char * const argv[]);
+
 //! @brief функция, записывающая массив строк в файл, если файла с таким
 //!        названием не существует, то создает его
 //!
@@ -183,5 +185,7 @@ int ft_string_changer(char ** array_pointers, int number1, int number2);      //
 //!
 //! @return 0
 int ft_print_info(void);
+
+char ** ft_create_array_copy(char ** const array_pointers, const int count_of_string);
 
 #endif //Onegin_comments

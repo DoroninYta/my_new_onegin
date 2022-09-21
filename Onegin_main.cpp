@@ -13,55 +13,39 @@
 
                                              //fb_s
                                              //ENUM
-                                             //3 files
+                                            //3 files
                                              //\n in printf
 
 int main (int argc, char * argv[])
 {
-    char standard_file_name[] = "XXX.txt";         //
-    char * adress = standard_file_name;
-    if (argc != 1)                                 //!TODO move into other function
-    {
-        if (strcmp(argv[1], "--help") == 0)
-        {
-            ft_print_info();
-            return 0;
-        }
-        adress = argv[1];
-    }
 
+    char * file_name_read = NULL;
+    char * file_name_write = NULL;
+    printf("%d", argc);
+    ft_files_name(&file_name_read, &file_name_write, argc, argv);
 
-    char * text = ft_open_file_create_array_text(adress);
+    char * text = ft_open_file_create_array_text(file_name_read);
 
     int count_of_strings = ft_count_string( text, '\n');
 
     char ** array_pointers = ft_create_array_pointers(count_of_strings, text, '\n');
 
-    char ** sorted_array_pointers_begin = ft_string_sort(ft_my_str_compare, array_pointers,
+    char ** array_pointers_copy = ft_create_array_copy(array_pointers, count_of_strings);
+
+    char ** sorted_array_pointers = ft_string_sort(ft_my_str_compare, array_pointers_copy,
                                                          count_of_strings, 0);
 
-    char ** sorted_array_pointers_end   = ft_string_sort(ft_my_str_compare, array_pointers,
+    ft_file_writer(sorted_array_pointers, file_name_write, count_of_strings, "w");
+
+    sorted_array_pointers = ft_string_sort(ft_my_str_compare, array_pointers_copy,
                                                          count_of_strings, 1);
 
-    if (argc >3)
-    {
-        ft_file_writer(sorted_array_pointers_begin, argv[2], count_of_strings, "w");
-        ft_file_writer(sorted_array_pointers_end,   argv[2], count_of_strings, "a+");
-        ft_file_writer(array_pointers,              argv[2], count_of_strings, "a+");
-    }
-    else
-    {
-        ft_file_writer(sorted_array_pointers_begin, "Onegin_sorted.txt", count_of_strings, "w+");
-        ft_file_writer(sorted_array_pointers_end,   "Onegin_sorted.txt", count_of_strings, "a+");
-        ft_file_writer(array_pointers,              "Onegin_sorted.txt", count_of_strings, "a+");
-    }
-
-
+    ft_file_writer(sorted_array_pointers, file_name_write, count_of_strings, "a+");
+    ft_file_writer(array_pointers,        file_name_write, count_of_strings, "a+");
 
     free(text);
     free(array_pointers);
-    free(sorted_array_pointers_begin);
-    free(sorted_array_pointers_end);
+    free(sorted_array_pointers);
 
     return 0;
 }
