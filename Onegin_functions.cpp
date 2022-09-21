@@ -31,8 +31,23 @@ int ft_file_writer( char ** array_pointers, const char * file_name,
 	 return Normal_exit;
  }
 
+int ft_file_writer_text(const char * file_name_write, const char * text,
+                        const int count_of_symbols, const char * mode)
+{
+    FILE * stream = fopen(file_name_write, mode);
 
-char ** ft_create_array_copy(char ** const array_pointers, const int count_of_strings)
+    int i = 0;
+    int string_number = 1;
+    while (string_number <= count_of_symbols)
+    {
+        fprintf(stream, "<!<%s>!>\n", text + i + 1);
+        while (text[++i] != '\0');
+        string_number++;
+    }
+}
+
+
+/*char ** ft_create_array_copy(char ** const array_pointers, const int count_of_strings)
 {
     assert(array_pointers);
 
@@ -42,7 +57,7 @@ char ** ft_create_array_copy(char ** const array_pointers, const int count_of_st
 	ft_array_copy(new_array_pointers, array_pointers, count_of_strings);
 
 	return new_array_pointers;
-}
+} */
  //!  Сортировка идет на увелечение
 char ** ft_string_sort(int (*my_str_compare)(const char *, const char *, const int ),
                        char ** array_pointers, const int count_of_strings, const int command)
@@ -177,24 +192,29 @@ int ft_checker_symbols(const char * string, int * number, const int command)    
 
 }
 
-
-char * ft_open_file_create_array_text(const char * file_name)
+FILE * ft_open_file(const char * file_name)
 {
     assert(file_name);
 
-    int file_size = ft_file_size(file_name);
-
-    FILE * ptrFile = fopen(file_name, "r");
-	if (ptrFile == NULL)
+    FILE * stream = fopen(file_name, "r");
+    if (stream == NULL)
     {
         printf("uncorrect name of file\n program can't open it");
         return NULL;
     }
 
+    return stream;
+}
+char * ft_create_array_text(FILE * stream, const char * file_name)
+{
+    assert(stream);
+
+    int file_size = ft_file_size(file_name);
+
 	char * array_with_text = (char *)calloc(file_size + 1, sizeof(array_with_text[0]));
 	assert(array_with_text);
 
-	int normal_size = fread(array_with_text, sizeof(array_with_text[0]), file_size, ptrFile);	// Доставить нулевой симво
+	int normal_size = fread(array_with_text, sizeof(array_with_text[0]), file_size, stream);	// Доставить нулевой симво
 
 	char * string_checker = (char *)realloc(array_with_text, sizeof(string_checker[0]) * (normal_size + 1));  //
 	assert(string_checker);
@@ -202,7 +222,7 @@ char * ft_open_file_create_array_text(const char * file_name)
 
 	array_with_text[normal_size] = '\0';   //избавление от мусора при печати
 
-	fclose(ptrFile);
+	fclose(stream);
 
 	return array_with_text;
 }
@@ -255,17 +275,6 @@ int ft_files_name(char ** file_name_read, char ** file_name_write, const int arg
     {
         *file_name_read  = "XXX.txt";
         *file_name_write = "ONEGIN.txt";
-    }
-    return Normal_exit;
-}
-
-int ft_array_copy( char ** new_array, char ** const string, const int count_symbols)  // ДЕД вопрос: почему выдает ошибку, если я делаю второй массив const
-{
-    int i = 0;
-    while (i < count_symbols)
-    {
-        new_array[i] = string[i];
-        i++;
     }
     return Normal_exit;
 }

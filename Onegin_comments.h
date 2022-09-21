@@ -22,8 +22,22 @@ enum command {
     Revers_sort
 };
 
-int revers_comparing( const char * string1, const char * string2);
+
 int ft_files_name(char ** file_name_read, char ** file_name_write, const int argc, char * const argv[]);
+
+
+int ft_file_writer_text(const char * file_name_write, const char * text,
+                        const int count_of_symbols, const char * mode);
+
+
+char ** ft_q_sort(char ** array_pointers, const int count_of_strings, const int command);
+
+
+FILE * ft_open_file(const char * file_name);
+
+
+char * ft_create_array_text(FILE * stream, const char * file_name);
+
 
 //! @brief функция, записывающая массив строк в файл, если файла с таким
 //!        названием не существует, то создает его
@@ -106,16 +120,8 @@ int revers_comparing( const void * string1, const void * string2);
 //! @return 0 если функция выполнила свою работу, 1 если command введена неправильно
 int ft_checker_symbols(const char * string, int * number, const int command);
 
-char ** ft_q_sort(char ** array_pointers, const int count_of_strings, const int command);
 
-//! @brief открывает файл, динамически создает массив, заполняет его текстом из файла.
-//!        После вызова данной функции необходимо использовать free
-//!
-//! @param file_name название файл, который будет обработан
-//!
-//! @return указатель на созданный массив или 1, если введено некоректное имя файла
 
-char * ft_open_file_create_array_text(const char * file_name);
 
 
 //!	@brief динамически создает массив указателей, каждый из которых соответствует новой строке, символ, равный symbol
@@ -142,7 +148,7 @@ char ** ft_create_array_pointers(int count_of_lines, char * array_text, const ch
 //! @param count_symbols количество элементов в массиве для более быстрой операции копирования
 //!
 //! @return 0
-int ft_array_copy( char ** new_array, char ** string, const int count_symbols);
+//int ft_array_copy( char ** new_array, char ** string, const int count_symbols);
 
 
 //! @brief функция, передающая размер файла с помощью функции stat
@@ -186,6 +192,6 @@ int ft_string_changer(char ** array_pointers, int number1, int number2);      //
 //! @return 0
 int ft_print_info(void);
 
-char ** ft_create_array_copy(char ** const array_pointers, const int count_of_string);
+//char ** ft_create_array_copy(char ** const array_pointers, const int count_of_string);
 
 #endif //Onegin_comments
