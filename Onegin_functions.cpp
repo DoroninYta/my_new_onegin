@@ -3,10 +3,12 @@
 
 #include "Onegin_comments.h"
 
+
 // структура
 
 
-int ft_file_writer( char ** array_pointers, const char * file_name, const int count_of_symbols, const char * mode)
+int ft_file_writer( char ** array_pointers, const char * file_name,
+                    const int count_of_symbols, const char * mode)
 {
 	 assert(array_pointers);
      FILE * stream = fopen(file_name, mode);    //!w+ for first func using, after a+
@@ -54,7 +56,7 @@ char ** ft_string_sort(int (*my_str_compare)(const char *, const char *, const i
         int i = 0;
 		while (i + 1 < count_of_strings)
 		{
-			if ((*my_str_compare)(array_pointers[i], array_pointers[i+1], command) < 0)
+			if (my_str_compare(array_pointers[i], array_pointers[i+1], command) < 0)
 			{
 				count_of_replacement++;
 				ft_string_changer(array_pointers, i, i + 1);
@@ -70,7 +72,7 @@ char ** ft_q_sort(char ** array_pointers, const int count_of_strings, const int 
 
     if (command == Straight_sort)
     {
-        qsort(array_pointers, 6, sizeof(array_pointers[0]), straight_comparing);
+        qsort(array_pointers, count_of_strings, sizeof(array_pointers[0]), straight_comparing);
         return array_pointers;
     }
     else if (command == Revers_sort)
@@ -87,14 +89,14 @@ int straight_comparing(const void * string1, const void * string2)
     assert(string1);
     assert(string2);
 
-    const char * a = (const char *)string1;
-    const char * b = (const char *)string2;
+    const char * a = *(const char **)string1;
+    const char * b = *(const char **)string2;
 
     int count1 = 0;
     int count2 = 0;
 
-    ft_checker_symbols(b, &count1, Straight_sort);
-    ft_checker_symbols(a, &count2, Straight_sort);
+    ft_checker_symbols(a, &count1, Straight_sort);
+    ft_checker_symbols(b, &count2, Straight_sort);
 
     while (a[count1] == b[count2] && a[count1] > '\0' && b[count2] > '\0')
     {
@@ -102,7 +104,7 @@ int straight_comparing(const void * string1, const void * string2)
         count2++;
     }
 
-    return (int)b[count2] - (int)a[count1];
+    return a[count1] - b[count2];
 }
 
 
@@ -111,8 +113,8 @@ int revers_comparing(const void * string1, const void * string2)
     assert(string1);
     assert(string2);
 
-    const char * a = (const char *)string1;
-    const char * b = (const char *)string2;
+    const char * a = *(const char **)string1;
+    const char * b = *(const char **)string2;
 
     int count1 = strlen(a);
     int count2 = strlen(b);
@@ -125,7 +127,7 @@ int revers_comparing(const void * string1, const void * string2)
         count1--;
         count2--;
     }
-    return (int)b[count2] - (int)a[count1];
+    return a[count1] - b[count2];
 }
 
 
