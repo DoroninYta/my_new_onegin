@@ -22,7 +22,7 @@ enum command {
     Revers_sort
 };
 
-
+int revers_comparing( const char * string1, const char * string2);
 int ft_files_name(char ** file_name_read, char ** file_name_write, const int argc, char * const argv[]);
 
 //! @brief функция, записывающая массив строк в файл, если файла с таким
@@ -80,7 +80,7 @@ int ft_my_str_compare(const char * string1, const char * string2, const int comm
 //!
 //! @return разность ascii кода первых 2 несовпадающих символов. Из символа второй строки
 //!         вычитается символ первой строки
-int straight_comparing(const char * string1, const char * string2);
+int straight_comparing(const void * string1, const void * string2);
 
 
 //! @brief Сортировка с конца строки
@@ -91,7 +91,7 @@ int straight_comparing(const char * string1, const char * string2);
 //!
 //! @return разность ascii кода первых 2 несовпадающих символов. Из символа второй строки
 //!         вычитается символ первой строки
-int revers_comparing( const char * string1, const char * string2);
+int revers_comparing( const void * string1, const void * string2);
 
 
 //! @brief Данная функция нужна для игнорирования в функции ft_my_str_compare знаков пунктуации
@@ -106,8 +106,8 @@ int revers_comparing( const char * string1, const char * string2);
 //! @return 0 если функция выполнила свою работу, 1 если command введена неправильно
 int ft_checker_symbols(const char * string, int * number, const int command);
 
+char ** ft_q_sort(char ** array_pointers, const int count_of_strings, const int command);
 
-int ft_condition(const char * string, const int number);
 //! @brief открывает файл, динамически создает массив, заполняет его текстом из файла.
 //!        После вызова данной функции необходимо использовать free
 //!

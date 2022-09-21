@@ -62,46 +62,70 @@ char ** ft_string_sort(int (*my_str_compare)(const char *, const char *, const i
 			i++;
 		}
 	}
-
 	return array_pointers;
 }
 
-int straight_comparing(const char * string1, const char * string2)
+char ** ft_q_sort(char ** array_pointers, const int count_of_strings, const int command)
+{
+
+    if (command == Straight_sort)
+    {
+        qsort(array_pointers, 6, sizeof(array_pointers[0]), straight_comparing);
+        return array_pointers;
+    }
+    else if (command == Revers_sort)
+    {
+        qsort(array_pointers, count_of_strings, sizeof(array_pointers[0]), revers_comparing);
+        return array_pointers;
+    }
+	else
+        return NULL;
+}
+
+int straight_comparing(const void * string1, const void * string2)
 {
     assert(string1);
     assert(string2);
 
+    const char * a = (const char *)string1;
+    const char * b = (const char *)string2;
+
     int count1 = 0;
     int count2 = 0;
 
-    ft_checker_symbols(string1, &count1, Straight_sort);
-    ft_checker_symbols(string2, &count2, Straight_sort);
+    ft_checker_symbols(b, &count1, Straight_sort);
+    ft_checker_symbols(a, &count2, Straight_sort);
 
-    while (string1[count1] == string2[count2] && string1[count1] > '\0' && string2[count2] > '\0')
+    while (a[count1] == b[count2] && a[count1] > '\0' && b[count2] > '\0')
     {
         count1++;
         count2++;
     }
 
-    return (int)string2[count2] - (int)string1[count1];
+    return (int)b[count2] - (int)a[count1];
 }
 
 
-int revers_comparing( const char * string1, const char * string2)
+int revers_comparing(const void * string1, const void * string2)
 {
+    assert(string1);
+    assert(string2);
 
-        int count1 = strlen(string2);
-        int count2 = strlen(string2);
+    const char * a = (const char *)string1;
+    const char * b = (const char *)string2;
 
-        ft_checker_symbols(string1, &count1, Revers_sort);
-        ft_checker_symbols(string2, &count2, Revers_sort);
+    int count1 = strlen(a);
+    int count2 = strlen(b);
 
-        while (string1[count1] == string2[count2] && count1 >= 0 && count2 >= 0)
-        {
-            count1--;
-            count2--;
-        }
-        return (int)string2[count2] - (int)string1[count1];
+    ft_checker_symbols(a, &count1, Revers_sort);
+    ft_checker_symbols(b, &count2, Revers_sort);
+
+    while (a[count1] == b[count2] && count1 >= 0 && count2 >= 0)
+    {
+        count1--;
+        count2--;
+    }
+    return (int)b[count2] - (int)a[count1];
 }
 
 
@@ -113,10 +137,10 @@ int ft_my_str_compare(const char * string1, const char * string2, const int comm
     assert(string2);
 
     if (command == Straight_sort)
-        return straight_comparing(string1, string2);
+        return straight_comparing((const void*)string1, (const void*)string2);
 
     else if (command == Revers_sort)   //from end
-            return revers_comparing(string1, string2);
+            return revers_comparing((const void *)string1, (const void *)string2);
 
     printf("uncorrect command");
 
