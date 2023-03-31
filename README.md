@@ -1,1 +1,1 @@
-This programm was created for really fast sorting of text, using array pointers
+This programm was created for really fast sortingtext, using array pointers
